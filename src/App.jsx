@@ -275,7 +275,6 @@ export default function App() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  // Close menu on nav click
   const handleNavClick = () => setMenuOpen(false);
 
   const s = SLIDES[slide];

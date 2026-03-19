@@ -11,25 +11,25 @@ const NAV_LINKS = [
 
 const SLIDES = [
   {
-    img: "/public/woman_power.jpeg",
+    img: "/woman_power.jpeg",
     tag: "Women Empowerment",
     title: "Giving Women the\nTools to Thrive",
     sub: "Vocational training, sewing machines, and dignity — one woman at a time.",
   },
   {
-    img: "/public/water.jpeg",
+    img: "/water.jpeg",
     tag: "Clean Water",
     title: "Clean Water is a\nBasic Human Right",
     sub: "470 hand pumps installed. Thousands of families transformed.",
   },
   {
-    img: "/public/Apna_ghar.jpeg",
+    img: "/Apna_ghar.jpeg",
     tag: "Apna Ghar Shelter",
     title: "A Home for Every\nOrphan & Widow",
     sub: "Our shelter provides food, safety, and belonging to those who need it most.",
   },
   {
-    img: "/public/ramadan_pkg.jpeg",
+    img: "/ramadan_pkg.jpeg",
     tag: "Ramadan Relief",
     title: "Sharing Blessings\nThis Ramadan",
     sub: "Food packages reaching widows, special children, and families in need.",
@@ -41,8 +41,8 @@ const PROGRAMS = [
     icon: "🧵",
     title: "Vocational Training Center",
     desc: "350 women trained in sewing skills, each graduating with their own sewing machine to launch a home-based business and achieve financial independence.",
-    img: "/public/training_1.jpeg",
-    img2: "/public/training_2.jpeg",
+    img: "/training_1.jpeg",
+    img2: "/training_2.jpeg",
     stat: "350+",
     statLabel: "Women Trained",
   },
@@ -50,8 +50,8 @@ const PROGRAMS = [
     icon: "💧",
     title: "Clean Drinking Water Project",
     desc: "Chairperson Mrs. Shabana Awan personally visited Kulachi to assess the water crisis. 470 hand pumps installed across Tehsil Paharpur & Tehsil Parowa — clean water for thousands.",
-    img: "/public/water1.jpeg",
-    img2: "/public/water.jpeg",
+    img: "/water1.jpeg",
+    img2: "/water.jpeg",
     stat: "470",
     statLabel: "Hand Pumps Installed",
   },
@@ -59,8 +59,8 @@ const PROGRAMS = [
     icon: "🏆",
     title: "Events & Sports Activities",
     desc: "SBD organizes community sports events, cultural gatherings, and awareness festivals that bring people together, promote healthy lifestyles, and strengthen community bonds.",
-    img: "/public/game1.jpeg",
-    img2: "/public/game2.jpeg",
+    img: "/game1.jpeg",
+    img2: "/game2.jpeg",
     stat: "Active",
     statLabel: "Community Engagement",
   },
@@ -68,8 +68,8 @@ const PROGRAMS = [
     icon: "🌙",
     title: "Ramadan Package Distribution",
     desc: "Every Ramadan, SBD personally delivers food packages to widows, orphans, special children, and needy families — bringing relief during the blessed month.",
-    img: "/public/ramadan1.jpeg",
-    img2: "/public/ramadan2.jpeg",
+    img: "/ramadan1.jpeg",
+    img2: "/ramadan2.jpeg",
     stat: "1000s",
     statLabel: "Families Reached",
   },
@@ -77,8 +77,8 @@ const PROGRAMS = [
     icon: "🏠",
     title: "Apna Ghar — Shelter Home",
     desc: "Our shelter 'Apna Ghar' provides a safe, warm home for orphans and widows. Food, necessities, and love are available — it truly feels like home to everyone who walks through its doors.",
-    img: "/public/ghar1.jpeg",
-    img2: "/public/ghar2.jpeg",
+    img: "/ghar1.jpeg",
+    img2: "/ghar2.jpeg",
     stat: "Safe",
     statLabel: "Haven for All",
   },
@@ -86,22 +86,22 @@ const PROGRAMS = [
     icon: "🌊",
     title: "Flood Relief Packages",
     desc: "When floods strike, Mrs. Shabana Awan leads relief efforts personally — going directly to affected areas to distribute essential packages to flood-stricken families.",
-    img: "/public/flood1.jpeg",
-    img2: "/public/flood2.jpeg",
+    img: "/flood1.jpeg",
+    img2: "/flood2.jpeg",
     stat: "On Ground",
     statLabel: "Leadership in Crisis",
   },
 ];
 
 const GALLERY = [
-  "/public/about_pic.jpeg",
-  "/public/g3.jfif",
-  "/public/meetingpic.jpeg",
-  "/public/g5.jpeg",
-  "/public/g6.jpeg",
-  "/public/g7.jpeg",
-  "/public/g11.jpeg",
-  "/public/g12.jpeg",
+  "/about_pic.jpeg",
+  "/g3.jfif",
+  "/meetingpic.jpeg",
+  "/g5.jpeg",
+  "/g6.jpeg",
+  "/g7.jpeg",
+  "/g11.jpeg",
+  "/g12.jpeg",
 ];
 
 const STATS = [
@@ -841,7 +841,7 @@ export default function App() {
               style={{ position: "relative", marginBottom: isMobile ? 24 : 0 }}
             >
               <img
-                src="/public/about_pic.jpeg"
+                src="/about_pic.jpeg"
                 alt="About SBD"
                 style={{ width: "100%", display: "block" }}
               />
@@ -915,7 +915,7 @@ export default function App() {
           <AnimSection>
             <img
               className="founder-img"
-              src="/public/shabana.jfif"
+              src="/shabana.jfif"
               alt="Founder"
               style={{
                 width: isMobile ? "100%" : 320,
@@ -1196,21 +1196,21 @@ export default function App() {
             num: "01",
             title: "Mashal-e-Raah — Vocational Training",
             body: "Our flagship vocational center has trained over 350 women in sewing skills. Each graduate receives her own sewing machine, enabling her to start a home-based business, support her family, and achieve true financial independence.",
-            img: "/public/train3.jfif",
+            img: "/train3.jfif",
             reverse: false,
           },
           {
             num: "02",
             title: "Kulachi Clean Water Initiative",
             body: "Mrs. Shabana Awan personally visited the Kulachi region to assess the acute drinking water crisis. Under her leadership, SBD installed 470 hand pumps in Tehsil Paharpur and Tehsil Parowa — providing thousands of families with access to clean, safe water.",
-            img: "/public/kulachi.jpeg",
+            img: "/kulachi.jpeg",
             reverse: true,
           },
           {
             num: "03",
             title: "Apna Ghar — Our Home, Our Family",
             body: "Apna Ghar is SBD's shelter home for orphans and widows. Here, residents have access to nutritious food, daily necessities, and a warm, caring community. It is not just a shelter — it is home, in every sense of the word.",
-            img: "/public/ghar3.jpeg",
+            img: "/ghar3.jpeg",
             reverse: false,
           },
         ].map((proj, i) => (

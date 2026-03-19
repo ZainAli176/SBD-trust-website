@@ -107,11 +107,21 @@ const GALLERY = [
 const STATS = [
   { num: "350+", label: "Women Trained" },
   { num: "470", label: "Hand Pumps Installed" },
-  { num: "500+", label: "Patients Supported Monthly" },
-  { num: "2014", label: "Year Established" },
+  { num: "500+", label: "Patients/Month" },
+  { num: "2014", label: "Est. Year" },
 ];
 
-function useInView(threshold = 0.15) {
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return isMobile;
+}
+
+function useInView(threshold = 0.1) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -135,7 +145,7 @@ function AnimSection({ children, className = "", style = {} }) {
       className={className}
       style={{
         opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(0)" : "translateY(40px)",
+        transform: inView ? "translateY(0)" : "translateY(30px)",
         transition: "opacity 0.7s ease, transform 0.7s ease",
         ...style,
       }}
@@ -151,7 +161,7 @@ function DonateBox() {
       style={{
         background: "#f0faf4",
         border: "1px solid #c0dfc8",
-        padding: 28,
+        padding: 24,
       }}
     >
       <div
@@ -199,7 +209,7 @@ function DonateBox() {
       {[
         ["Bank", "Meezan Bank LTD"],
         ["Account Title", "Society for Empowerment of Bint-e-Damaan"],
-        ["Account Number", "26010101804976"],
+        ["Account No.", "26010101804976"],
         ["IBAN", "PAK46MEZN002601-0101804976"],
         ["Swift Code", "MEZNPKKA"],
         ["Branch", "East Circular Road, Dera Ismail Khan"],
@@ -209,6 +219,8 @@ function DonateBox() {
           style={{
             display: "flex",
             justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 4,
             fontSize: 13,
             marginBottom: 8,
             fontFamily: "'Source Sans 3', sans-serif",
@@ -216,13 +228,15 @@ function DonateBox() {
             paddingBottom: 8,
           }}
         >
-          <span style={{ color: "#6b6b6b", fontWeight: 600 }}>{k}:</span>
+          <span style={{ color: "#6b6b6b", fontWeight: 600, flexShrink: 0 }}>
+            {k}:
+          </span>
           <span
             style={{
               color: "#1a1a1a",
               fontWeight: 600,
               textAlign: "right",
-              maxWidth: "58%",
+              wordBreak: "break-all",
             }}
           >
             {v}
@@ -247,6 +261,8 @@ export default function App() {
   const [slide, setSlide] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [donateOpen, setDonateOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const t = setInterval(() => setSlide((s) => (s + 1) % SLIDES.length), 5000);
@@ -259,26 +275,30 @@ export default function App() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  // Close menu on nav click
+  const handleNavClick = () => setMenuOpen(false);
+
   const s = SLIDES[slide];
+  const px = isMobile ? "20px" : "80px";
 
   return (
     <div
       style={{
-        fontFamily: "'Georgia', 'Palatino', serif",
+        fontFamily: "'Georgia', serif",
         background: "#faf9f6",
         color: "#1a1a1a",
         overflowX: "hidden",
         width: "100%",
-        maxWidth: "100vw",
       }}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Sans+3:wght@300;400;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body, #root { width: 100%; max-width: 100%; overflow-x: hidden; }
+        html, body, #root { width: 100%; overflow-x: hidden; }
         body { font-family: 'Source Sans 3', sans-serif; }
         h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
         a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; }
         :root {
           --green: #2d5a3d;
           --green-light: #4a8c60;
@@ -287,31 +307,128 @@ export default function App() {
           --dark: #1a1a1a;
           --gray: #6b6b6b;
         }
-        .nav-link { position: relative; padding: 4px 0; font-size: 14px; letter-spacing: 0.06em; font-family: 'Source Sans 3', sans-serif; font-weight: 600; color: #fff; transition: color 0.2s; }
-        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: var(--gold); transition: width 0.3s; }
+        .nav-link {
+          position: relative; padding: 4px 0;
+          font-size: 14px; letter-spacing: 0.06em;
+          font-family: 'Source Sans 3', sans-serif;
+          font-weight: 600; color: #fff; transition: color 0.2s;
+        }
+        .nav-link::after {
+          content: ''; position: absolute; bottom: -2px; left: 0;
+          width: 0; height: 2px; background: var(--gold); transition: width 0.3s;
+        }
         .nav-link:hover::after { width: 100%; }
         .nav-link:hover { color: var(--gold); }
-        .btn-gold { background: var(--gold); color: #fff; border: none; padding: 14px 32px; font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)); }
-        .btn-gold:hover { background: #b07d2a; transform: translateY(-2px); }
-        .program-card { background: #fff; border-left: 4px solid var(--green); padding: 28px; transition: all 0.3s; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-        .program-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(45,90,61,0.15); border-left-color: var(--gold); }
+        .btn-gold {
+          background: var(--gold); color: #fff; border: none;
+          padding: 12px 24px; font-family: 'Source Sans 3', sans-serif;
+          font-weight: 600; font-size: 13px; letter-spacing: 0.1em;
+          text-transform: uppercase; cursor: pointer; transition: all 0.3s;
+          clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+        }
+        .btn-gold:hover { background: #b07d2a; }
+        .program-card {
+          background: #fff; border-left: 4px solid var(--green);
+          padding: 24px; transition: all 0.3s;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .program-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 32px rgba(45,90,61,0.15);
+          border-left-color: var(--gold);
+        }
         .gallery-img { overflow: hidden; cursor: pointer; }
-        .gallery-img img { transition: transform 0.5s ease; width: 100%; height: 200px; object-fit: cover; display: block; }
+        .gallery-img img {
+          transition: transform 0.5s ease;
+          width: 100%; height: 180px; object-fit: cover; display: block;
+        }
         .gallery-img:hover img { transform: scale(1.08); }
-        .stat-item { text-align: center; padding: 32px 20px; border-right: 1px solid rgba(255,255,255,0.2); }
+        .stat-item {
+          text-align: center; padding: 24px 12px;
+          border-right: 1px solid rgba(255,255,255,0.2);
+        }
         .stat-item:last-child { border-right: none; }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: #fff; max-width: 520px; width: 100%; padding: 40px; position: relative; }
-        .slide-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; transition: all 0.3s; }
-        .slide-dot.active { background: var(--gold); border-color: var(--gold); width: 28px; border-radius: 5px; }
-        input, textarea { width: 100%; padding: 12px 16px; border: 1px solid #ddd; font-family: 'Source Sans 3', sans-serif; font-size: 14px; background: #fafafa; transition: border 0.2s; outline: none; }
-        input:focus, textarea:focus { border-color: var(--green); background: #fff; }
-        .section-tag { display: inline-block; background: var(--gold); color: #fff; padding: 4px 14px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-family: 'Source Sans 3', sans-serif; font-weight: 600; margin-bottom: 14px; }
-        .divider { width: 48px; height: 3px; background: var(--gold); margin: 16px 0 24px 0; }
-        .engage-banner { background: linear-gradient(135deg, #1a3a2a 0%, #2d5a3d 100%); color: #fff; padding: 60px 80px; text-align: center; position: relative; overflow: hidden; }
-        .engage-banner::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 40px); }
-        .section-heading { background: linear-gradient(135deg, var(--green) 0%, #4a8c60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .section-heading-gold { background: linear-gradient(135deg, #b07d2a 0%, var(--gold) 50%, #e0aa55 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .modal-overlay {
+          position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+          z-index: 2000; display: flex; align-items: center;
+          justify-content: center; padding: 16px;
+        }
+        .modal-box {
+          background: #fff; max-width: 500px; width: 100%;
+          padding: 32px; position: relative;
+          max-height: 90vh; overflow-y: auto;
+        }
+        .slide-dot {
+          width: 10px; height: 10px; border-radius: 50%;
+          border: 2px solid #fff; cursor: pointer; transition: all 0.3s;
+        }
+        .slide-dot.active {
+          background: var(--gold); border-color: var(--gold);
+          width: 24px; border-radius: 5px;
+        }
+        .section-tag {
+          display: inline-block; background: var(--gold); color: #fff;
+          padding: 4px 14px; font-size: 11px; letter-spacing: 0.15em;
+          text-transform: uppercase; font-family: 'Source Sans 3', sans-serif;
+          font-weight: 600; margin-bottom: 12px;
+        }
+        .divider { width: 48px; height: 3px; background: var(--gold); margin: 14px 0 20px 0; }
+        .section-heading {
+          background: linear-gradient(135deg, var(--green) 0%, #4a8c60 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .section-heading-gold {
+          background: linear-gradient(135deg, #b07d2a 0%, var(--gold) 50%, #e0aa55 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+        .hamburger span { display: block; width: 24px; height: 2px; background: #fff; transition: all 0.3s; }
+        .mobile-menu {
+          display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+          background: #1a3a2a; z-index: 1500; flex-direction: column;
+          align-items: center; justify-content: center; gap: 32px;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-nav-link {
+          font-family: 'Playfair Display', serif; font-size: 28px;
+          font-weight: 700; color: #fff; transition: color 0.2s;
+        }
+        .mobile-nav-link:hover { color: var(--gold); }
+        .close-btn {
+          position: absolute; top: 20px; right: 20px;
+          background: none; border: none; color: #fff;
+          font-size: 28px; cursor: pointer;
+        }
+
+        /* Responsive grid overrides */
+        @media (max-width: 767px) {
+          .hamburger { display: flex !important; }
+          .desktop-nav { display: none !important; }
+          .topbar-right { display: none !important; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .stats-grid .stat-item { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.15); }
+          .stats-grid .stat-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.2) !important; }
+          .stats-grid .stat-item:nth-last-child(-n+2) { border-bottom: none; }
+          .about-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .founder-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .founder-img { width: 100% !important; }
+          .programs-grid { grid-template-columns: 1fr !important; }
+          .project-grid { grid-template-columns: 1fr !important; gap: 32px !important; direction: ltr !important; }
+          .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .contact-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+          .footer-bottom { flex-direction: column !important; gap: 8px !important; text-align: center; }
+          .vision-grid { grid-template-columns: 1fr !important; }
+          .about-badge { left: 0 !important; bottom: -16px !important; }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .programs-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+          .gallery-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        }
       `}</style>
 
       {/* TOP BAR */}
@@ -319,20 +436,18 @@ export default function App() {
         style={{
           background: "#1a3a2a",
           color: "#d4c4a0",
-          padding: "8px 60px",
+          padding: "8px 24px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          fontSize: 13,
+          fontSize: 12,
           fontFamily: "'Source Sans 3', sans-serif",
-          width: "100%",
+          flexWrap: "wrap",
+          gap: 4,
         }}
       >
-        <span>
-          📧 bintedamaandikhan@gmail.com &nbsp;|&nbsp; 📞 0966-711338 /
-          0332-763-1095
-        </span>
-        <span style={{ color: "#c9933a" }}>
+        <span>📧 bintedamaandikhan@gmail.com &nbsp;|&nbsp; 📞 0966-711338</span>
+        <span className="topbar-right" style={{ color: "#c9933a" }}>
           Registered Non-Profit · Dera Ismail Khan, KPK
         </span>
       </div>
@@ -347,18 +462,19 @@ export default function App() {
           background: scrolled ? "rgba(26,58,42,0.97)" : "#2d5a3d",
           boxShadow: scrolled ? "0 4px 24px rgba(0,0,0,0.18)" : "none",
           transition: "all 0.4s",
-          padding: "0 60px",
+          padding: "0 24px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          height: 68,
+          height: 64,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        {/* Logo */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div
             style={{
-              width: 44,
-              height: 44,
+              width: 40,
+              height: 40,
               background: "var(--gold)",
               borderRadius: "50%",
               display: "flex",
@@ -367,7 +483,8 @@ export default function App() {
               fontFamily: "'Playfair Display', serif",
               fontWeight: 700,
               color: "#fff",
-              fontSize: 18,
+              fontSize: 16,
+              flexShrink: 0,
             }}
           >
             SBD
@@ -378,7 +495,7 @@ export default function App() {
                 fontFamily: "'Playfair Display', serif",
                 color: "#fff",
                 fontWeight: 700,
-                fontSize: 16,
+                fontSize: 14,
                 lineHeight: 1.1,
               }}
             >
@@ -389,7 +506,7 @@ export default function App() {
                 fontFamily: "'Playfair Display', serif",
                 color: "var(--gold)",
                 fontWeight: 700,
-                fontSize: 16,
+                fontSize: 14,
                 lineHeight: 1.1,
               }}
             >
@@ -397,7 +514,11 @@ export default function App() {
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
+        {/* Desktop Nav */}
+        <div
+          className="desktop-nav"
+          style={{ display: "flex", gap: 24, alignItems: "center" }}
+        >
           {NAV_LINKS.map((l) => (
             <a key={l.label} href={l.href} className="nav-link">
               {l.label}
@@ -405,21 +526,54 @@ export default function App() {
           ))}
           <button
             className="btn-gold"
-            style={{ padding: "10px 22px", fontSize: 13 }}
+            style={{ padding: "9px 18px", fontSize: 12 }}
             onClick={() => setDonateOpen(true)}
           >
             Donate Now
           </button>
         </div>
+        {/* Hamburger */}
+        <div className="hamburger" onClick={() => setMenuOpen(true)}>
+          <span />
+          <span />
+          <span />
+        </div>
       </nav>
+
+      {/* MOBILE MENU */}
+      <div className={`mobile-menu${menuOpen ? " open" : ""}`}>
+        <button className="close-btn" onClick={() => setMenuOpen(false)}>
+          ✕
+        </button>
+        {NAV_LINKS.map((l) => (
+          <a
+            key={l.label}
+            href={l.href}
+            className="mobile-nav-link"
+            onClick={handleNavClick}
+          >
+            {l.label}
+          </a>
+        ))}
+        <button
+          className="btn-gold"
+          style={{ marginTop: 8 }}
+          onClick={() => {
+            setDonateOpen(true);
+            setMenuOpen(false);
+          }}
+        >
+          Donate Now
+        </button>
+      </div>
 
       {/* HERO SLIDER */}
       <section
         id="home"
         style={{
           position: "relative",
-          height: "calc(100vh - 108px)",
-          minHeight: 560,
+          height: isMobile ? "70vh" : "calc(100vh - 108px)",
+          minHeight: 420,
           overflow: "hidden",
           width: "100%",
         }}
@@ -445,7 +599,7 @@ export default function App() {
                 position: "absolute",
                 inset: 0,
                 background:
-                  "linear-gradient(to right, rgba(10,30,18,0.85) 0%, rgba(10,30,18,0.4) 60%, transparent 100%)",
+                  "linear-gradient(to right, rgba(10,30,18,0.88) 0%, rgba(10,30,18,0.5) 60%, rgba(10,30,18,0.3) 100%)",
               }}
             />
           </div>
@@ -458,7 +612,7 @@ export default function App() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            padding: "0 100px",
+            padding: isMobile ? "0 24px" : "0 100px",
           }}
         >
           <AnimSection>
@@ -467,13 +621,13 @@ export default function App() {
                 display: "inline-block",
                 background: "var(--gold)",
                 color: "#fff",
-                padding: "5px 16px",
-                fontSize: 12,
+                padding: "4px 14px",
+                fontSize: 11,
                 letterSpacing: "0.15em",
                 textTransform: "uppercase",
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontWeight: 600,
-                marginBottom: 20,
+                marginBottom: 16,
               }}
             >
               {s.tag}
@@ -481,13 +635,15 @@ export default function App() {
             <h1
               style={{
                 color: "#fff",
-                fontSize: "clamp(36px, 5vw, 64px)",
+                fontSize: isMobile
+                  ? "clamp(26px, 8vw, 40px)"
+                  : "clamp(36px, 5vw, 64px)",
                 fontWeight: 900,
-                lineHeight: 1.15,
-                maxWidth: 680,
+                lineHeight: 1.2,
+                maxWidth: 620,
                 whiteSpace: "pre-line",
-                marginBottom: 20,
-                textShadow: "0 2px 20px rgba(0,0,0,0.3)",
+                marginBottom: 16,
+                textShadow: "0 2px 20px rgba(0,0,0,0.4)",
               }}
             >
               {s.title}
@@ -495,10 +651,9 @@ export default function App() {
             <p
               style={{
                 color: "rgba(255,255,255,0.85)",
-                fontSize: 18,
-                maxWidth: 520,
+                fontSize: isMobile ? 15 : 18,
+                maxWidth: 500,
                 lineHeight: 1.6,
-                marginBottom: 36,
                 fontFamily: "'Source Sans 3', sans-serif",
               }}
             >
@@ -509,12 +664,12 @@ export default function App() {
         <div
           style={{
             position: "absolute",
-            bottom: 30,
+            bottom: 20,
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 2,
             display: "flex",
-            gap: 10,
+            gap: 8,
           }}
         >
           {SLIDES.map((_, i) => (
@@ -529,6 +684,7 @@ export default function App() {
 
       {/* STATS BAR */}
       <div
+        className="stats-grid"
         style={{
           background: "var(--green)",
           display: "grid",
@@ -537,17 +693,11 @@ export default function App() {
         }}
       >
         {STATS.map((st, i) => (
-          <AnimSection
-            key={i}
-            className="stat-item"
-            style={{
-              transition: `opacity 0.6s ${i * 0.1}s ease, transform 0.6s ${i * 0.1}s ease`,
-            }}
-          >
+          <AnimSection key={i} className="stat-item">
             <div
               style={{
                 fontFamily: "'Playfair Display', serif",
-                fontSize: 42,
+                fontSize: isMobile ? 28 : 40,
                 fontWeight: 900,
                 color: "var(--gold)",
               }}
@@ -557,8 +707,8 @@ export default function App() {
             <div
               style={{
                 color: "rgba(255,255,255,0.8)",
-                fontSize: 13,
-                letterSpacing: "0.08em",
+                fontSize: isMobile ? 11 : 13,
+                letterSpacing: "0.06em",
                 textTransform: "uppercase",
                 fontFamily: "'Source Sans 3', sans-serif",
                 marginTop: 4,
@@ -573,9 +723,14 @@ export default function App() {
       {/* ABOUT */}
       <section
         id="about"
-        style={{ padding: "96px 100px", background: "#faf9f6", width: "100%" }}
+        style={{
+          padding: isMobile ? "60px 24px" : "96px 80px",
+          background: "#faf9f6",
+          width: "100%",
+        }}
       >
         <div
+          className="about-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -587,7 +742,7 @@ export default function App() {
             <div className="section-tag">About Us</div>
             <h2
               style={{
-                fontSize: "clamp(28px, 3vw, 44px)",
+                fontSize: "clamp(26px, 4vw, 44px)",
                 fontWeight: 900,
                 lineHeight: 1.2,
                 marginBottom: 0,
@@ -602,24 +757,23 @@ export default function App() {
               style={{
                 color: "var(--gray)",
                 lineHeight: 1.9,
-                marginBottom: 20,
+                marginBottom: 16,
                 fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: 16,
+                fontSize: 15,
               }}
             >
               Established in 2014, the Society for Empowerment of Bint-e-Damaan
               (SBD) is a registered non-profit charitable foundation based in
-              Dera Ismail Khan, Khyber Pakhtunkhwa. We are dedicated to the
-              empowerment and development of underprivileged women and children
-              in rural areas.
+              Dera Ismail Khan, Khyber Pakhtunkhwa, dedicated to the empowerment
+              of underprivileged women and children.
             </p>
             <p
               style={{
                 color: "var(--gray)",
                 lineHeight: 1.9,
-                marginBottom: 32,
+                marginBottom: 28,
                 fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: 16,
+                fontSize: 15,
               }}
             >
               Through education, vocational training, healthcare support, and
@@ -627,11 +781,12 @@ export default function App() {
               empower marginalized communities across the region.
             </p>
             <div
+              className="vision-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
-                gap: 20,
-                marginBottom: 36,
+                gap: 16,
+                marginBottom: 8,
               }}
             >
               {[
@@ -650,19 +805,19 @@ export default function App() {
                   key={i}
                   style={{
                     background: "#fff",
-                    padding: 20,
+                    padding: 18,
                     borderTop: "3px solid var(--gold)",
                   }}
                 >
-                  <div style={{ fontSize: 24, marginBottom: 8 }}>
+                  <div style={{ fontSize: 22, marginBottom: 8 }}>
                     {item.icon}
                   </div>
                   <div
                     style={{
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 700,
-                      fontSize: 16,
-                      marginBottom: 8,
+                      fontSize: 15,
+                      marginBottom: 6,
                     }}
                   >
                     {item.title}
@@ -670,7 +825,7 @@ export default function App() {
                   <div
                     style={{
                       color: "var(--gray)",
-                      fontSize: 14,
+                      fontSize: 13,
                       lineHeight: 1.7,
                       fontFamily: "'Source Sans 3', sans-serif",
                     }}
@@ -682,27 +837,30 @@ export default function App() {
             </div>
           </AnimSection>
           <AnimSection>
-            <div style={{ position: "relative" }}>
+            <div
+              style={{ position: "relative", marginBottom: isMobile ? 24 : 0 }}
+            >
               <img
                 src="/public/about_pic.jpeg"
                 alt="About SBD"
                 style={{ width: "100%", display: "block" }}
               />
               <div
+                className="about-badge"
                 style={{
                   position: "absolute",
-                  bottom: -24,
-                  left: -24,
+                  bottom: -20,
+                  left: -20,
                   background: "var(--gold)",
                   color: "#fff",
-                  padding: "24px 28px",
-                  maxWidth: 260,
+                  padding: "20px 24px",
+                  maxWidth: 220,
                 }}
               >
                 <div
                   style={{
                     fontFamily: "'Playfair Display', serif",
-                    fontSize: 32,
+                    fontSize: 28,
                     fontWeight: 900,
                   }}
                 >
@@ -711,7 +869,7 @@ export default function App() {
                 <div
                   style={{
                     fontFamily: "'Source Sans 3', sans-serif",
-                    fontSize: 14,
+                    fontSize: 13,
                     opacity: 0.9,
                   }}
                 >
@@ -726,7 +884,7 @@ export default function App() {
       {/* FOUNDER MESSAGE */}
       <section
         style={{
-          padding: "80px 100px",
+          padding: isMobile ? "60px 24px" : "80px 80px",
           background: "linear-gradient(135deg, #1a3a2a 0%, #2d5a3d 100%)",
           position: "relative",
           overflow: "hidden",
@@ -738,38 +896,29 @@ export default function App() {
             position: "absolute",
             top: -60,
             right: -60,
-            width: 300,
-            height: 300,
-            border: "60px solid rgba(201,147,58,0.12)",
+            width: 250,
+            height: 250,
+            border: "50px solid rgba(201,147,58,0.1)",
             borderRadius: "50%",
           }}
         />
         <div
-          style={{
-            position: "absolute",
-            bottom: -40,
-            left: -40,
-            width: 200,
-            height: 200,
-            border: "40px solid rgba(255,255,255,0.05)",
-            borderRadius: "50%",
-          }}
-        />
-        <div
+          className="founder-grid"
           style={{
             position: "relative",
             display: "grid",
             gridTemplateColumns: "auto 1fr",
-            gap: 60,
+            gap: 48,
             alignItems: "center",
           }}
         >
           <AnimSection>
             <img
+              className="founder-img"
               src="/public/shabana.jfif"
               alt="Founder"
               style={{
-                width: 360,
+                width: isMobile ? "100%" : 320,
                 display: "block",
                 border: "4px solid var(--gold)",
               }}
@@ -787,7 +936,7 @@ export default function App() {
                 textTransform: "uppercase",
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontWeight: 600,
-                marginBottom: 16,
+                marginBottom: 14,
               }}
             >
               Founder's Message
@@ -795,7 +944,7 @@ export default function App() {
             <h2
               style={{
                 color: "#fff",
-                fontSize: 36,
+                fontSize: isMobile ? 26 : 34,
                 fontWeight: 900,
                 marginBottom: 6,
               }}
@@ -806,8 +955,8 @@ export default function App() {
               style={{
                 color: "var(--gold)",
                 fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: 15,
-                marginBottom: 24,
+                fontSize: 14,
+                marginBottom: 20,
               }}
             >
               Chairperson & Founder, SBD
@@ -815,12 +964,12 @@ export default function App() {
             <blockquote
               style={{
                 color: "rgba(255,255,255,0.85)",
-                fontSize: 18,
+                fontSize: isMobile ? 15 : 17,
                 lineHeight: 1.85,
                 fontStyle: "italic",
                 fontFamily: "'Playfair Display', serif",
                 borderLeft: "3px solid var(--gold)",
-                paddingLeft: 24,
+                paddingLeft: 20,
               }}
             >
               "I have dedicated my life to uplifting the women and children of
@@ -837,43 +986,43 @@ export default function App() {
       {/* PROGRAMS */}
       <section
         id="programs"
-        style={{ padding: "96px 100px", background: "#fff", width: "100%" }}
+        style={{
+          padding: isMobile ? "60px 24px" : "96px 80px",
+          background: "#fff",
+          width: "100%",
+        }}
       >
-        <AnimSection style={{ textAlign: "center", marginBottom: 60 }}>
+        <AnimSection style={{ textAlign: "center", marginBottom: 48 }}>
           <div
             className="section-tag"
             style={{ display: "block", textAlign: "center" }}
           >
             What We Do
           </div>
-          <h2 style={{ fontSize: "clamp(28px, 3vw, 44px)", fontWeight: 900 }}>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 42px)", fontWeight: 900 }}>
             Our <span className="section-heading">Programs</span> &{" "}
             <span className="section-heading-gold">Initiatives</span>
           </h2>
-          <div className="divider" style={{ margin: "16px auto 0" }} />
+          <div className="divider" style={{ margin: "14px auto 0" }} />
         </AnimSection>
         <div
+          className="programs-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 32,
+            gap: 24,
           }}
         >
           {PROGRAMS.map((p, i) => (
-            <AnimSection
-              key={i}
-              style={{
-                transition: `opacity 0.6s ${i * 0.08}s ease, transform 0.6s ${i * 0.08}s ease`,
-              }}
-            >
+            <AnimSection key={i}>
               <div className="program-card">
-                <div style={{ fontSize: 36, marginBottom: 12 }}>{p.icon}</div>
+                <div style={{ fontSize: 32, marginBottom: 10 }}>{p.icon}</div>
                 <h3
                   style={{
                     fontFamily: "'Playfair Display', serif",
                     fontWeight: 700,
-                    fontSize: 20,
-                    marginBottom: 12,
+                    fontSize: 18,
+                    marginBottom: 10,
                     color: "var(--dark)",
                   }}
                 >
@@ -883,9 +1032,9 @@ export default function App() {
                   style={{
                     color: "var(--gray)",
                     lineHeight: 1.7,
-                    fontSize: 15,
+                    fontSize: 14,
                     fontFamily: "'Source Sans 3', sans-serif",
-                    marginBottom: 16,
+                    marginBottom: 14,
                   }}
                 >
                   {p.desc}
@@ -895,7 +1044,6 @@ export default function App() {
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
                     gap: 8,
-                    marginTop: 16,
                   }}
                 >
                   <img
@@ -903,7 +1051,7 @@ export default function App() {
                     alt={p.title}
                     style={{
                       width: "100%",
-                      height: 120,
+                      height: 110,
                       objectFit: "cover",
                       display: "block",
                     }}
@@ -913,7 +1061,7 @@ export default function App() {
                     alt={p.title}
                     style={{
                       width: "100%",
-                      height: 120,
+                      height: 110,
                       objectFit: "cover",
                       display: "block",
                     }}
@@ -921,20 +1069,20 @@ export default function App() {
                 </div>
                 <div
                   style={{
-                    marginTop: 16,
+                    marginTop: 14,
                     display: "flex",
                     alignItems: "center",
-                    gap: 12,
+                    gap: 10,
                   }}
                 >
                   <div
                     style={{
                       background: "var(--green)",
                       color: "#fff",
-                      padding: "6px 14px",
+                      padding: "5px 12px",
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 700,
-                      fontSize: 20,
+                      fontSize: 18,
                     }}
                   >
                     {p.stat}
@@ -942,7 +1090,7 @@ export default function App() {
                   <div
                     style={{
                       color: "var(--gray)",
-                      fontSize: 13,
+                      fontSize: 12,
                       fontFamily: "'Source Sans 3', sans-serif",
                     }}
                   >
@@ -956,16 +1104,48 @@ export default function App() {
       </section>
 
       {/* UNIVERSITY ENGAGEMENT BANNER */}
-      <div className="engage-banner" style={{ width: "100%" }}>
+      <div
+        style={{
+          background: "linear-gradient(135deg, #1a3a2a 0%, #2d5a3d 100%)",
+          color: "#fff",
+          padding: isMobile ? "48px 24px" : "60px 80px",
+          textAlign: "center",
+          position: "relative",
+          overflow: "hidden",
+          width: "100%",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 40px)",
+          }}
+        />
         <AnimSection>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🎓</div>
-          <div className="section-tag">Join the Movement</div>
+          <div
+            style={{
+              fontSize: 40,
+              marginBottom: 14,
+              position: "relative",
+              zIndex: 1,
+            }}
+          >
+            🎓
+          </div>
+          <div
+            className="section-tag"
+            style={{ position: "relative", zIndex: 1 }}
+          >
+            Join the Movement
+          </div>
           <h2
             style={{
               color: "#fff",
-              fontSize: 36,
+              fontSize: isMobile ? 24 : 34,
               fontWeight: 900,
-              marginBottom: 16,
+              marginBottom: 14,
               position: "relative",
               zIndex: 1,
             }}
@@ -978,8 +1158,8 @@ export default function App() {
           <p
             style={{
               color: "rgba(255,255,255,0.8)",
-              fontSize: 17,
-              maxWidth: 600,
+              fontSize: isMobile ? 14 : 16,
+              maxWidth: 580,
               margin: "0 auto",
               lineHeight: 1.8,
               fontFamily: "'Source Sans 3', sans-serif",
@@ -998,11 +1178,15 @@ export default function App() {
       {/* PROJECTS */}
       <section
         id="projects"
-        style={{ padding: "96px 100px", background: "#faf9f6", width: "100%" }}
+        style={{
+          padding: isMobile ? "60px 24px" : "96px 80px",
+          background: "#faf9f6",
+          width: "100%",
+        }}
       >
-        <AnimSection style={{ marginBottom: 60 }}>
+        <AnimSection style={{ marginBottom: 48 }}>
           <div className="section-tag">Key Projects</div>
-          <h2 style={{ fontSize: "clamp(28px, 3vw, 44px)", fontWeight: 900 }}>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 42px)", fontWeight: 900 }}>
             Our <span className="section-heading">Major Projects</span>
           </h2>
           <div className="divider" />
@@ -1030,25 +1214,26 @@ export default function App() {
             reverse: false,
           },
         ].map((proj, i) => (
-          <AnimSection key={i} style={{ marginBottom: 64 }}>
+          <AnimSection key={i} style={{ marginBottom: isMobile ? 48 : 64 }}>
             <div
+              className="project-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
-                gap: 64,
+                gap: 48,
                 alignItems: "center",
-                direction: proj.reverse ? "rtl" : "ltr",
+                direction: !isMobile && proj.reverse ? "rtl" : "ltr",
               }}
             >
               <div style={{ direction: "ltr" }}>
                 <div
                   style={{
                     fontFamily: "'Playfair Display', serif",
-                    fontSize: 72,
+                    fontSize: isMobile ? 48 : 70,
                     fontWeight: 900,
                     color: "rgba(45,90,61,0.1)",
                     lineHeight: 1,
-                    marginBottom: -16,
+                    marginBottom: -12,
                   }}
                 >
                   {proj.num}
@@ -1056,9 +1241,9 @@ export default function App() {
                 <h3
                   style={{
                     fontFamily: "'Playfair Display', serif",
-                    fontSize: 28,
+                    fontSize: isMobile ? 20 : 26,
                     fontWeight: 700,
-                    marginBottom: 16,
+                    marginBottom: 14,
                   }}
                 >
                   <span className="section-heading">{proj.title}</span>
@@ -1068,14 +1253,14 @@ export default function App() {
                     width: 40,
                     height: 3,
                     background: "var(--gold)",
-                    marginBottom: 20,
+                    marginBottom: 16,
                   }}
                 />
                 <p
                   style={{
                     color: "var(--gray)",
                     lineHeight: 1.9,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontFamily: "'Source Sans 3', sans-serif",
                   }}
                 >
@@ -1089,7 +1274,7 @@ export default function App() {
                   style={{
                     width: "100%",
                     display: "block",
-                    boxShadow: "8px 8px 0 var(--gold)",
+                    boxShadow: "6px 6px 0 var(--gold)",
                   }}
                 />
               </div>
@@ -1101,30 +1286,29 @@ export default function App() {
       {/* GALLERY */}
       <section
         id="gallery"
-        style={{ padding: "96px 100px", background: "#fff", width: "100%" }}
+        style={{
+          padding: isMobile ? "60px 24px" : "96px 80px",
+          background: "#fff",
+          width: "100%",
+        }}
       >
-        <AnimSection style={{ marginBottom: 48 }}>
+        <AnimSection style={{ marginBottom: 36 }}>
           <div className="section-tag">Gallery</div>
-          <h2 style={{ fontSize: "clamp(28px, 3vw, 44px)", fontWeight: 900 }}>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 42px)", fontWeight: 900 }}>
             Our Work <span className="section-heading">in Pictures</span>
           </h2>
           <div className="divider" />
         </AnimSection>
         <div
+          className="gallery-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 12,
+            gap: 10,
           }}
         >
           {GALLERY.map((g, i) => (
-            <AnimSection
-              key={i}
-              className="gallery-img"
-              style={{
-                transition: `opacity 0.5s ${i * 0.06}s ease, transform 0.5s ${i * 0.06}s ease`,
-              }}
-            >
+            <AnimSection key={i} className="gallery-img">
               <img src={g} alt={`Gallery ${i + 1}`} />
             </AnimSection>
           ))}
@@ -1134,16 +1318,21 @@ export default function App() {
       {/* CONTACT */}
       <section
         id="contact"
-        style={{ padding: "96px 100px", background: "#faf9f6", width: "100%" }}
+        style={{
+          padding: isMobile ? "60px 24px" : "96px 80px",
+          background: "#faf9f6",
+          width: "100%",
+        }}
       >
         <div
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80 }}
+          className="contact-grid"
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60 }}
         >
           <AnimSection>
             <div className="section-tag">Get In Touch</div>
             <h2
               style={{
-                fontSize: "clamp(24px, 3vw, 40px)",
+                fontSize: "clamp(22px, 3vw, 38px)",
                 fontWeight: 900,
                 marginBottom: 0,
               }}
@@ -1155,8 +1344,9 @@ export default function App() {
               style={{
                 color: "var(--gray)",
                 lineHeight: 1.9,
-                marginBottom: 32,
+                marginBottom: 28,
                 fontFamily: "'Source Sans 3', sans-serif",
+                fontSize: 15,
               }}
             >
               Reach out to us for partnerships, volunteering opportunities,
@@ -1181,19 +1371,19 @@ export default function App() {
             ].map((c, i) => (
               <div
                 key={i}
-                style={{ display: "flex", gap: 16, marginBottom: 24 }}
+                style={{ display: "flex", gap: 14, marginBottom: 20 }}
               >
-                <div style={{ fontSize: 22, marginTop: 2 }}>{c.icon}</div>
+                <div style={{ fontSize: 20, marginTop: 2 }}>{c.icon}</div>
                 <div>
                   <div
                     style={{
                       fontFamily: "'Source Sans 3', sans-serif",
                       fontWeight: 600,
                       color: "var(--green)",
-                      fontSize: 13,
+                      fontSize: 12,
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
-                      marginBottom: 4,
+                      marginBottom: 3,
                     }}
                   >
                     {c.label}
@@ -1202,7 +1392,7 @@ export default function App() {
                     style={{
                       color: "var(--gray)",
                       fontFamily: "'Source Sans 3', sans-serif",
-                      fontSize: 15,
+                      fontSize: 14,
                     }}
                   >
                     {c.val}
@@ -1222,16 +1412,17 @@ export default function App() {
         style={{
           background: "#0f2218",
           color: "rgba(255,255,255,0.75)",
-          padding: "60px 100px 32px",
+          padding: isMobile ? "48px 24px 24px" : "60px 80px 32px",
           width: "100%",
         }}
       >
         <div
+          className="footer-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "2fr 1fr 1fr 1fr",
-            gap: 48,
-            marginBottom: 48,
+            gap: 40,
+            marginBottom: 40,
           }}
         >
           <div>
@@ -1240,13 +1431,13 @@ export default function App() {
                 display: "flex",
                 alignItems: "center",
                 gap: 12,
-                marginBottom: 20,
+                marginBottom: 16,
               }}
             >
               <div
                 style={{
-                  width: 44,
-                  height: 44,
+                  width: 40,
+                  height: 40,
                   background: "var(--gold)",
                   borderRadius: "50%",
                   display: "flex",
@@ -1255,7 +1446,8 @@ export default function App() {
                   fontFamily: "'Playfair Display', serif",
                   fontWeight: 700,
                   color: "#fff",
-                  fontSize: 18,
+                  fontSize: 16,
+                  flexShrink: 0,
                 }}
               >
                 SBD
@@ -1265,7 +1457,7 @@ export default function App() {
                   fontFamily: "'Playfair Display', serif",
                   color: "#fff",
                   fontWeight: 700,
-                  fontSize: 16,
+                  fontSize: 15,
                 }}
               >
                 Society for Binte-Damaan
@@ -1273,9 +1465,8 @@ export default function App() {
             </div>
             <p
               style={{
-                fontSize: 14,
+                fontSize: 13,
                 lineHeight: 1.8,
-                maxWidth: 300,
                 fontFamily: "'Source Sans 3', sans-serif",
               }}
             >
@@ -1288,8 +1479,8 @@ export default function App() {
               style={{
                 color: "#fff",
                 fontFamily: "'Playfair Display', serif",
-                marginBottom: 16,
-                fontSize: 16,
+                marginBottom: 14,
+                fontSize: 15,
               }}
             >
               Quick Links
@@ -1301,8 +1492,8 @@ export default function App() {
                 style={{
                   display: "block",
                   color: "rgba(255,255,255,0.65)",
-                  fontSize: 14,
-                  marginBottom: 10,
+                  fontSize: 13,
+                  marginBottom: 8,
                   fontFamily: "'Source Sans 3', sans-serif",
                   transition: "color 0.2s",
                 }}
@@ -1320,8 +1511,8 @@ export default function App() {
               style={{
                 color: "#fff",
                 fontFamily: "'Playfair Display', serif",
-                marginBottom: 16,
-                fontSize: 16,
+                marginBottom: 14,
+                fontSize: 15,
               }}
             >
               Programs
@@ -1337,8 +1528,8 @@ export default function App() {
               <div
                 key={p}
                 style={{
-                  fontSize: 14,
-                  marginBottom: 10,
+                  fontSize: 13,
+                  marginBottom: 8,
                   fontFamily: "'Source Sans 3', sans-serif",
                 }}
               >
@@ -1351,22 +1542,22 @@ export default function App() {
               style={{
                 color: "#fff",
                 fontFamily: "'Playfair Display', serif",
-                marginBottom: 16,
-                fontSize: 16,
+                marginBottom: 14,
+                fontSize: 15,
               }}
             >
               Donate
             </h4>
             <button
               className="btn-gold"
-              style={{ width: "100%", marginBottom: 16 }}
+              style={{ width: "100%", marginBottom: 14 }}
               onClick={() => setDonateOpen(true)}
             >
               Donate Now
             </button>
             <div
               style={{
-                fontSize: 13,
+                fontSize: 12,
                 lineHeight: 1.7,
                 fontFamily: "'Source Sans 3', sans-serif",
               }}
@@ -1380,18 +1571,19 @@ export default function App() {
               >
                 Meezan Bank LTD
               </div>
-              <div>Account Title: SBD</div>
-              <div>A/C: 26010101804976</div>
+              <div>Account: SBD</div>
+              <div>26010101804976</div>
             </div>
           </div>
         </div>
         <div
+          className="footer-bottom"
           style={{
             borderTop: "1px solid rgba(255,255,255,0.1)",
-            paddingTop: 24,
+            paddingTop: 20,
             display: "flex",
             justifyContent: "space-between",
-            fontSize: 13,
+            fontSize: 12,
             fontFamily: "'Source Sans 3', sans-serif",
           }}
         >
@@ -1410,8 +1602,8 @@ export default function App() {
               onClick={() => setDonateOpen(false)}
               style={{
                 position: "absolute",
-                top: 16,
-                right: 16,
+                top: 14,
+                right: 14,
                 background: "none",
                 border: "none",
                 fontSize: 22,
@@ -1421,7 +1613,9 @@ export default function App() {
             >
               ✕
             </button>
-            <div className="section-tag">Support Our Cause</div>
+            <div className="section-tag" style={{ marginBottom: 16 }}>
+              Support Our Cause
+            </div>
             <DonateBox />
           </div>
         </div>

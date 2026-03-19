@@ -1313,7 +1313,136 @@ export default function App() {
           ))}
         </div>
       </section>
+      {/* CERTIFICATES */}
+      <section
+        id="certificates"
+        style={{
+          padding: isMobile ? "60px 24px" : "96px 80px",
+          background: "#fff",
+          width: "100%",
+        }}
+      >
+        <AnimSection style={{ marginBottom: 48 }}>
+          <div className="section-tag">Official Documents</div>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 42px)", fontWeight: 900 }}>
+            Registration <span className="section-heading">Certificates</span>
+          </h2>
+          <div className="divider" />
+          <p
+            style={{
+              color: "var(--gray)",
+              fontFamily: "'Source Sans 3', sans-serif",
+              fontSize: 15,
+              maxWidth: 600,
+              lineHeight: 1.8,
+            }}
+          >
+            Society for Binte-Damaan is a legally registered non-profit
+            organization, operating transparently and accountably since 2014.
+          </p>
+        </AnimSection>
 
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+            gap: isMobile ? 32 : 48,
+          }}
+        >
+          {[
+            {
+              img: "/certifiacte1.jfif",
+              title: "Registration Certificate",
+              desc: "Officially registered as a non-profit charitable foundation under the Social Welfare Department.",
+              badge: "✅ Verified",
+            },
+            {
+              img: "/certifiacte2.jfif",
+              title: "Active Organization — Since 2014",
+              desc: "Registered in 2014 and continuously operating with an active organization account in good standing.",
+              badge: "🟢 Active",
+            },
+          ].map((cert, i) => (
+            <AnimSection key={i}>
+              <div
+                style={{
+                  background: "#faf9f6",
+                  border: "1px solid #e0e0e0",
+                  borderTop: "4px solid var(--gold)",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.07)",
+                  transition: "transform 0.3s",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "translateY(-4px)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "translateY(0)")
+                }
+              >
+                <div style={{ overflow: "hidden", background: "#f0f0f0" }}>
+                  <img
+                    src={cert.img}
+                    alt={cert.title}
+                    style={{
+                      width: "100%",
+                      height: isMobile ? 220 : 300,
+                      objectFit: "cover",
+                      display: "block",
+                      transition: "transform 0.4s",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.target.style.transform = "scale(1.03)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.target.style.transform = "scale(1)")
+                    }
+                  />
+                </div>
+                <div style={{ padding: "24px 28px" }}>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      background: "#e8f5ee",
+                      color: "var(--green)",
+                      padding: "4px 12px",
+                      borderRadius: 20,
+                      fontSize: 12,
+                      fontFamily: "'Source Sans 3', sans-serif",
+                      fontWeight: 600,
+                      marginBottom: 12,
+                    }}
+                  >
+                    {cert.badge}
+                  </div>
+                  <h3
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      fontWeight: 700,
+                      fontSize: isMobile ? 18 : 22,
+                      marginBottom: 10,
+                      color: "var(--dark)",
+                    }}
+                  >
+                    {cert.title}
+                  </h3>
+                  <p
+                    style={{
+                      color: "var(--gray)",
+                      fontSize: 14,
+                      lineHeight: 1.7,
+                      fontFamily: "'Source Sans 3', sans-serif",
+                    }}
+                  >
+                    {cert.desc}
+                  </p>
+                </div>
+              </div>
+            </AnimSection>
+          ))}
+        </div>
+      </section>
       {/* CONTACT */}
       <section
         id="contact"

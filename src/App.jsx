@@ -1351,13 +1351,13 @@ export default function App() {
         >
           {[
             {
-              img: "/certifiacte1.jfif",
+              img: "/certficate1.jfif",
               title: "Registration Certificate",
               desc: "Officially registered as a non-profit charitable foundation under the Social Welfare Department.",
               badge: "✅ Verified",
             },
             {
-              img: "/certifiacte2.jfif",
+              img: "/certificate2.jfif",
               title: "Active Organization — Since 2014",
               desc: "Registered in 2014 and continuously operating with an active organization account in good standing.",
               badge: "🟢 Active",
